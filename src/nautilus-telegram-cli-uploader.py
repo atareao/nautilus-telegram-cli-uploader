@@ -119,6 +119,29 @@ def send_file(peer, afile):
     return send('file', peer, afile)
 
 
+def get_dialogs_from_telegram_cli():
+    cmd = 'telegram-cli -C -W -e "dialog_list 51"'
+    args = shlex.split(cmd)
+    p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    data1, data2 = p.communicate()
+    ansi_escape = re.compile(r'\x1b[^m]*m')
+    ans = ansi_escape.sub('', data1.decode('utf-8'))
+    ans = unicodedata.normalize('NFKD', ans).encode('ascii', 'ignore')
+    print('----')
+    ans = ans.replace('> \r  \r', '')
+    print(ans)
+    dialogs = []
+    for element in ans.split('\n')[8:-3]:
+        if element.startswith('User') or element.startswith('Chat') or\
+                element.startswith('Channel'):
+            element = element.replace(
+                'User ', '').replace('Chat ', '').replace(
+                'Channel ', '').split(':')[0]
+            dialogs.append(element)
+    dialogs = sorted(dialogs, key=lambda s: s.lower())
+    return dialogs
+
+
 def get_contacts_from_telegram_cli():
     cmd = 'telegram-cli -C -W -e "contact_list"'
     args = shlex.split(cmd)
@@ -238,7 +261,7 @@ class SendDialog(Gtk.Dialog):
         hbox1.pack_start(label, True, True, 10)
 
         contactsstore = Gtk.ListStore(str)
-        for contact in get_contacts():
+        for contact in get_dialogs_from_telegram_cli():
             contactsstore.append([contact])
         self.comboboxcontacts = Gtk.ComboBox.new()
         self.comboboxcontacts.set_model(contactsstore)
@@ -438,7 +461,7 @@ class TelegramCliUploaderMenuProvider(GObject.GObject,
                                       FileManager.MenuProvider):
 
     def __init__(self):
-        self.contacts = get_contacts()
+        pass
 
     def all_files_are_files(self, items):
         for item in items:
@@ -532,8 +555,11 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 
 if __name__ == '__main__':
     # print(send_file('atareao', '/home/lorenzo/PDF/pendientes.pdf'))
+    '''
     sd = SendDialog(None)
     if sd.run() == Gtk.ResponseType.ACCEPT:
         print(sd.get_selected())
         print(send_file('{0}'.format(sd.get_selected()),
               '/home/lorenzo/PDF/pendientes.pdf'))
+    '''
+    print(get_dialogs_from_telegram_cli())

@@ -1,3 +1,9 @@
+nautilus-telegram-cli-uploader (0.4.0-0extras16.04.0) xenial; urgency=medium
+
+  * send to dialogs
+
+ -- Lorenzo Carbonell <lorenzo.carbonell.cerezo@gmail.com>  Tue, 02 May 2017 10:54:29 +0200
+
 nautilus-telegram-cli-uploader (0.3.1-0extras16.04.3) xenial; urgency=medium
 
   * Ready
