@@ -314,13 +314,6 @@ class DoItInBackground(IdleObject, Thread):
     def stop(self, *args):
         self.stopit = True
 
-    def run(self):
-        try:
-            pass
-        except Exception as e:
-            print(e)
-            self.ok = False
-
     def send_file(self, file_in):
         filename, file_extension = os.path.splitext(file_in)
         if file_extension.lower() in IMAGE_EXTENSIONS:
@@ -458,7 +451,7 @@ class TelegramCliUploaderMenuProvider(GObject.GObject,
         if len(files) > 0:
             sd = SendDialog(window)
             if sd.run() == Gtk.ResponseType.ACCEPT:
-                contact = sd.get_selected.replace(' ', '_')
+                contact = sd.get_selected().replace(' ', '_')
                 diib = DoItInBackground(contact,
                                         files)
                 progreso = Progreso(_('Send files to telegram'),
