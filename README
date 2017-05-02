@@ -1,18 +1,18 @@
-nautilus-telegram-uploader
-=======================
+nautilus-telegram-cli-uploader
+==============================
 
-nautilus-telegram-uploader
+nautilus-telegram-cli-uploader
 
 Download
 --------
 
 Download the [package][dlp] *or* checkout the source:
 
-    $ git clone https://github.com/atareao/nautilus-telegram-uploader.git
+    $ git clone https://github.com/atareao/nautilus-telegram-cli-uploader.git
 
 Installation
 ------------
 
     $ sudo add-apt-repositoy ppa:atareao/nautilus-extensions
     $ sudo apt-get update
-    $ sudo apt-get install nautilus-telegram-uploader
+    $ sudo apt-get install nautilus-telegram-cli-uploader
