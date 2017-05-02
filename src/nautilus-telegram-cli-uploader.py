@@ -317,13 +317,13 @@ class DoItInBackground(IdleObject, Thread):
     def send_file(self, file_in):
         filename, file_extension = os.path.splitext(file_in)
         if file_extension.lower() in IMAGE_EXTENSIONS:
-            self.tb.send_photo(self.peer, file_in)
+            send_photo(self.peer, file_in)
         elif file_extension.lower() in VIDEO_EXTENSIONS:
-            self.tb.send_video(self.peer, file_in)
+            send_video(self.peer, file_in)
         elif file_extension.lower() in AUDIO_EXTENSIONS:
-            self.tb.send_audio(self.peer, file_in)
+            send_audio(self.peer, file_in)
         else:
-            self.tb.send_document(self.peer, file_in)
+            send_file(self.peer, file_in)
 
     def run(self):
         total = 0
@@ -452,6 +452,8 @@ class TelegramCliUploaderMenuProvider(GObject.GObject,
             sd = SendDialog(window)
             if sd.run() == Gtk.ResponseType.ACCEPT:
                 contact = sd.get_selected().replace(' ', '_')
+                sleep(200)
+                sd.destroy()
                 diib = DoItInBackground(contact,
                                         files)
                 progreso = Progreso(_('Send files to telegram'),
@@ -464,6 +466,8 @@ class TelegramCliUploaderMenuProvider(GObject.GObject,
                 progreso.connect('i-want-stop', diib.stop)
                 diib.start()
                 progreso.run()
+            else:
+                sd.destroy()
 
     def get_file_items(self, window, sel_items):
         top_menuitem = FileManager.MenuItem(
